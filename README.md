@@ -474,7 +474,7 @@ Because the tunnel won't exist before the host is up, this needs to be applied w
 $ terraform apply -target module.my_host
 ```
 
-This should finish by giving you the `docker_tunnel_command` output. Run that in another terminal, and then finish with another `terraform apply`. Afterwards, you should be able to visit the `test_link` and see nginx greeting you.
+This should finish by giving you the `docker_tunnel_command` output. Run that in another terminal, and then finish with another `terraform apply`. Afterwards, you should be able to visit the `test_link` and see nginx greeting you. edit
 
 <!-- terraform-docs:begin -->
 ## Inputs
