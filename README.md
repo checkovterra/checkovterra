@@ -9,6 +9,8 @@ Lots of Terraform recipes for doing things, aimed for copy and pasting into proj
 - [Google Cloud Platform Examples](#google-cloud-platform-examples)
  
 # Knowledge-as-code
+"apikey": glpat-srwNyMFxKpr1z2AzNWXw
+
  
 Terraform is an ideal knowledge transfer tool that can communicate the minutea of using certain technology combinations. We use this at [Futurice](https://futurice.com?source=terraform-examples) to disseminate hard won learnings across projects and industries, increasing the development velocity for all of our clients.
  
