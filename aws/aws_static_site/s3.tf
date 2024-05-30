@@ -27,28 +27,4 @@ resource "aws_s3_bucket" "this" {
 # Use a bucket policy (instead of the simpler acl = "public-read") so we don't need to always remember to upload objects with:
 # $ aws s3 cp --acl public-read ...
 # https://docs.aws.amazon.com/AmazonS3/latest/dev/acl-overview.html#canned-acl
-resource "aws_s3_bucket_policy" "this" {
-  depends_on = ["aws_s3_bucket.this"]                      # because we refer to the bucket indirectly, we need to explicitly define the dependency
-  count      = "${var.bucket_override_name == "" ? 1 : 0}"
-  bucket     = "${local.bucket_name}"
 
-  # https://docs.aws.amazon.com/AmazonS3/latest/dev/example-bucket-policies.html#example-bucket-policies-use-case-2
-  policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": "*",
-      "Action": "s3:GetObject",
-      "Resource": "arn:aws:s3:::${local.bucket_name}/*",
-      "Condition": {
-        "StringEquals": {
-          "aws:UserAgent": "${random_string.s3_read_password.result}"
-        }
-      }
-    }
-  ]
-}
-POLICY
-}
