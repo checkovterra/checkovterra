@@ -97,9 +97,8 @@ resource "aws_iam_role_policy_attachment" "task_policy_attach" {
 }
 
 
-resource "aws_ecs_cluster" "this" {
-  name = "${var.prefix}-${var.environment}"
-}
+
+
 
 resource "aws_security_group" "wordpress" {
   name        = "${var.prefix}-wordpress-${var.environment}"
