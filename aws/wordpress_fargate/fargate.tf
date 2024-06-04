@@ -147,70 +147,7 @@ resource "aws_ecs_service" "this" {
 }
 
 
-resource "aws_ecs_task_definition" "this" {
-  family                   = "${var.prefix}-${var.environment}"
-  execution_role_arn       = aws_iam_role.task_execution_role.arn
-  task_role_arn            = aws_iam_role.task_role.arn
-  network_mode             = "awsvpc"
-  requires_compatibilities = ["FARGATE"]
-  cpu                      = var.task_cpu
-  memory                   = var.task_memory
-  container_definitions    = <<CONTAINER_DEFINITION
-[
-  {
-    "secrets": [
-      {
-        "name": "WORDPRESS_DB_USER", 
-        "valueFROM": "${aws_ssm_parameter.db_master_user.arn}"
-      },
-      {
-        "name": "WORDPRESS_DB_PASSWORD", 
-        "valueFROM": "${aws_ssm_parameter.db_master_password.arn}"
-      }
-    ],
-    "environment": [
-      {
-        "name": "WORDPRESS_DB_HOST",
-        "value": "${aws_rds_cluster.this.endpoint}"
-      },
-      {
-        "name": "WORDPRESS_DB_NAME",
-        "value": "wordpress"
-      }
-    ],
-    "essential": true,
-    "image": "wordpress",        
-    "name": "wordpress",
-    "portMappings": [
-      {
-        "containerPort": 80
-      }
-    ],
-    "mountPoints": [
-      {
-        "containerPath": "/var/www/html",
-        "sourceVolume": "efs"
-      }
-    ],
-    "logConfiguration": {
-      "logDriver":"awslogs",
-      "options": {
-        "awslogs-group": "${aws_cloudwatch_log_group.wordpress.name}",
-        "awslogs-region": "${data.aws_region.current.name}",
-        "awslogs-stream-prefix": "app"
-      }
-    }
-  }
-]
-CONTAINER_DEFINITION
 
-  volume {
-    name = "efs"
-    efs_volume_configuration {
-      file_system_id = aws_efs_file_system.this.id
-    }
-  }
-}
 
 resource "aws_cloudwatch_log_group" "wordpress" {
   name              = "/${var.prefix}/${var.environment}/fg-task"
