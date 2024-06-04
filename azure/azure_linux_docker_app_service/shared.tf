@@ -28,15 +28,7 @@ resource "azurerm_key_vault" "current" {
   sku_name = "standard"
 }
 
-resource "azurerm_container_registry" "current" {
-  name                = local.acr_name
-  resource_group_name = data.azurerm_resource_group.current.name
-  location            = data.azurerm_resource_group.current.location
-  sku                 = "Standard"
 
-  # We'll be using AD login
-  admin_enabled = false
-}
 
 resource "azurerm_application_insights" "current" {
   name                = local.app_insights_name
