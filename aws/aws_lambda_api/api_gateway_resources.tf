@@ -1,11 +1,6 @@
 # Add root resource to the API (it it needs to be included separately from the "proxy" resource defined below), which forwards to our Lambda:
 
-resource "aws_api_gateway_method" "proxy_root" {
-  rest_api_id   = "${aws_api_gateway_rest_api.this.id}"
-  resource_id   = "${aws_api_gateway_rest_api.this.root_resource_id}"
-  http_method   = "ANY"
-  authorization = "NONE"
-}
+
 
 resource "aws_api_gateway_integration" "proxy_root" {
   rest_api_id             = "${aws_api_gateway_rest_api.this.id}"
