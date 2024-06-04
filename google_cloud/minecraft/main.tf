@@ -78,47 +78,7 @@ resource "google_compute_address" "minecraft" {
 }
 
 # VM to run Minecraft, we use preemptable which will shutdown within 24 hours
-resource "google_compute_instance" "minecraft" {
-  name         = "minecraft"
-  machine_type = "n1-standard-1"
-  zone         = local.zone
-  tags         = ["minecraft"]
 
-  # Run itzg/minecraft-server docker image on startup
-  # The instructions of https://hub.docker.com/r/itzg/minecraft-server/ are applicable
-  # For instance, Ssh into the instance and you can run
-  #  docker logs mc
-  #  docker exec -i mc rcon-cli
-  # Once in rcon-cli you can "op <player_id>" to make someone an operator (admin)
-  # Use 'sudo journalctl -u google-startup-scripts.service' to retrieve the startup script output
-  metadata_startup_script = "docker run -d -p 25565:25565 -e EULA=TRUE -e VERSION=1.12.2 -v /var/minecraft:/data --name mc -e TYPE=FORGE -e FORGEVERSION=14.23.0.2552 -e MEMORY=2G --rm=true itzg/minecraft-server:latest;"
-
-  metadata = {
-    enable-oslogin = "TRUE"
-  }
-      
-  boot_disk {
-    auto_delete = false # Keep disk after shutdown (game data)
-    source      = google_compute_disk.minecraft.self_link
-  }
-
-  network_interface {
-    network = google_compute_network.minecraft.name
-    access_config {
-      nat_ip = google_compute_address.minecraft.address
-    }
-  }
-
-  service_account {
-    email  = google_service_account.minecraft.email
-    scopes = ["userinfo-email"]
-  }
-
-  scheduling {
-    preemptible       = true # Closes within 24 hours (sometimes sooner)
-    automatic_restart = false
-  }
-}
 
 # Create a private network so the minecraft instance cannot access
 # any other resources.
